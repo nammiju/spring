@@ -3,10 +3,12 @@ package co.yedam.prjt.board.service;
 import java.util.List;
 
 public interface ReplyService {
-	//�Խñ� ��ȣ�� ��ȸ
-	List<ReplyVO> getReply(Long bno);
-	//��� ���
+	//조회
+	List<ReplyVO> getReply(ReplyVO vo);
+	//등록
 	int insertReply(ReplyVO vo);
-	//��� ����
-	int deleteReply(Long rno);
+	//수정
+	int updateReply(ReplyVO vo);
+	//삭제
+	int deleteReply(ReplyVO vo);
 }

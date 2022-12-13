@@ -14,9 +14,9 @@ public class ReplyServiceImpl implements ReplyService {
 	ReplyService service;
 
 	@Override
-	public List<ReplyVO> getReply(Long bno) {
+	public List<ReplyVO> getReply(ReplyVO vo) {
 		// 댓글가져오기
-		return service.getReply(bno);
+		return service.getReply(vo);
 	}
 
 	@Override
@@ -26,9 +26,16 @@ public class ReplyServiceImpl implements ReplyService {
 	}
 
 	@Override
-	public int deleteReply(Long rno) {
-		// 삭제
-		return service.deleteReply(rno);
+	public int updateReply(ReplyVO vo) {
+		// 수정
+		return service.updateReply(vo);
 	}
+
+	@Override
+	public int deleteReply(ReplyVO vo) {
+		// 삭제
+		return service.deleteReply(vo);
+	}
+
 
 }

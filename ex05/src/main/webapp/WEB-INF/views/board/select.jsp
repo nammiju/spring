@@ -9,19 +9,42 @@
 <script type="text/javascript">
 	$(function(){
 		replyInsert();
+		replyUpdate();
 		
 		//댓글 등록
 		function replyInsert(){
 			$("#btnInsert").on("click", function(){
 				$.ajax({
-					
+					url : path + '/reply',
+					method : "post",
+					data : $("#replyForm").serialize(),
+					dataType : 'json'
+				}).then( res => {
+					alert("등록완료");
+					$("tbody").append(makeTr(res));
 				})
 			})
 		}
 		
+		//댓글 수정
+		function replyInsert(){
+			$("#btnUpdate").on("click", function(){
+				$.ajax({
+					url : path+ '/reply',
+					method : "put",
+					data : JSON.stringify( $("#replyForm").serializeObject() ),
+					contentType : "application/json"
+				}).then( res => {
+					alert("수정완료");
+					tr.replaceWith(	makeTr(res)	);
+				})
+			})
+		}
+		//댓글 삭제
+		
 		//댓글 tr만들어줌
 		function makeTr(reply){
-			let tr = `<tr>
+			let tr = `<tr data-bno="\${reply.bno}">
 				<td>${reply.replyer}</td>
 				<td>${reply.reply} </td>
 				<td>${reply.replyDate}</td>

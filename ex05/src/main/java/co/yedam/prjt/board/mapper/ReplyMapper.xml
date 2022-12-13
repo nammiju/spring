@@ -17,6 +17,14 @@
 		VALUES (#{rno}, #{bno}, #{reply}, #{replyer})
 	</insert>
 	
+	<!-- 댓글 수정 -->
+	<update id="updateReply" parameterType="long">
+		UPDATE TBL_REPLY
+		SET
+		REPLY = #{reply}
+		WHERE BNO = #{bno}
+	</update>
+	
 	<!-- 댓글 삭제 -->
 	<delete id="deleteReply" parameterType="long">
 		DELETE FROM TBL_REPLY
