@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.prjt.board.mapper.ReplyMapper">
+	<!-- 게시글번호로 조회 -->
+	<select id="getReply" resultType="co.yedam.prjt.board.service.ReplyVO">
+		SELECT * FROM TBL_BOARD WHERE
+		BNO = #{bno}
+	</select>
+
+	<!-- 댓글 등록 -->
+	<insert id="insertReply" parameterType="co.yedam.prjt.board.service.ReplyVO">
+		<selectKey keyProperty="rno" resultType="long"
+			order="BEFORE">
+			SELECT SEQ_REPLY.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO TBL_REPLY (RNO, BNO, REPLY, REPLYER)
+		VALUES (#{rno}, #{bno}, #{reply}, #{replyer})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReply" parameterType="long">
+		DELETE FROM TBL_REPLY
+		WHERE RNO = #{rno}
+	</delete>
+</mapper>

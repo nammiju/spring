@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.yedam.prjt.emp.mapper.EmpMapper">
+	<!-- 자주 쓰이는 조건절은 -->
+	<sql id="condition">
+		<where>
+			<if test="departmentId != null and !departmentId.equals('') ">
+				DEPARTMENT_ID = #{departmentId}
+			</if>
+			<if test="firstName != null and firstName != '' ">
+				AND FIRST_NAME LIKE '%' || #{firstName} || '%'
+			</if>
+			<if test="employeeIds != null">
+				AND employee_id in
+				<foreach collection="employeeIds" item="id" open="("
+					close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(*) FROM EMPLOYEES
+		<include refid="condition" />
+	</select>
+
+	<!-- 전체조회/ >,<기호가 있으면 cdata로 묶어줘야 텍스트로 인식함 -->
+	<select id="getEmpAll" resultType="empVO">
+		SELECT * FROM ( SELECT ROWNUM RN, A.* FROM (
+		SELECT * FROM EMPLOYEES
+		<include refid="condition" />
+		ORDER BY EMPLOYEE_ID DESC
+<![CDATA[  
+		) A WHERE ROWNUM <= #{last}	) WHERE RN >= #{first}
+]]>
+	</select>
+
+	<!-- 단건조회 -->
+	<select id="getEmp" resultType="empVO" parameterType="string">
+		SELECT *
+		FROM
+		EMPLOYEES
+		WHERE EMPLOYEE_ID = #{value}
+	</select>
+
+	<!-- 사원등록 -->
+	<insert id="insertEmp" parameterType="empVO">
+		<selectKey keyProperty="employeeId" resultType="string"
+			order="BEFORE">
+			SELECT MAX(EMPLOYEE_ID)+1 FROM EMPLOYEES
+		</selectKey>
+		INSERT INTO
+		EMPLOYEES (
+		EMPLOYEE_ID,
+		FIRST_NAME,
+		LAST_NAME,
+		EMAIL,
+		HIRE_DATE,
+		JOB_ID
+		)VALUES(
+		#{employeeId},
+		#{firstName},
+		#{lastName},
+		#{email},
+		#{hireDate},
+		#{jobId}
+		)
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateName" parameterType="empVO">
+		UPDATE EMPLOYEES
+		SET
+		FIRST_NAME = #{firstName}
+		WHERE EMPLOYEE_ID = #{employeeId}
+	</update>
+
+	<update id="updateEmp" parameterType="empVO">
+		UPDATE EMPLOYEES
+		SET
+		FIRST_NAME = #{firstName},
+		LAST_NAME = #{lastName},
+		EMAIL = #{email},
+		JOB_ID = #{jobId},
+		hire_date = #{hireDate}
+		WHERE EMPLOYEE_ID = #{employeeId}
+	</update>
+
+	<select id="getDeptAll" resultType="map">
+		SELECT DEPARTMENT_ID
+		"departmentId",
+		DEPARTMENT_NAME "departmentName"
+		FROM DEPARTMENTS
+	</select>
+
+	<!-- 매니저 확인 -->
+	<select id="getManagerCheck" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		EMPLOYEES
+		WHERE MANAGER_ID = #{value}
+	</select>
+
+	<!-- 삭제 -->
+	<delete id="deleteEmp">
+		DELETE FROM EMPLOYEES
+		WHERE EMPLOYEE_ID = #{value}
+	</delete>
+	
+	<!-- jobs테이블 조회 -->
+	<select id="getJobs" resultType="map">
+		SELECT	JOB_ID "jobId",
+				JOB_TITLE "jobTitle"
+		FROM JOBS
+	</select>
+
+</mapper>
