@@ -27,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardVO getBoard(String bno) {
 		// 상세조회
-		return null;
+		return boardMapper.getBoard(bno);
 	}
 
 	@Override

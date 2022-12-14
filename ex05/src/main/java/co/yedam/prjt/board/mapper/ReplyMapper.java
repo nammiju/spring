@@ -6,7 +6,7 @@ import co.yedam.prjt.board.service.ReplyVO;
 
 public interface ReplyMapper {
 	// 댓글 목록
-	List<ReplyVO> getReply(ReplyVO vo);
+	List<ReplyVO> getReply(Long bno);
 
 	// 댓글 등록
 	int insertReply(ReplyVO vo);
@@ -15,5 +15,8 @@ public interface ReplyMapper {
 	int updateReply(ReplyVO vo);
 
 	// 댓글 삭제
-	int deleteReply(ReplyVO vo);
+	int deleteReply(Long bno);
+	
+	// 단건조회
+	ReplyVO ReplySelect(Long rno);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.yedam.prjt.board.mapper.ReplyMapper;
 import co.yedam.prjt.board.service.ReplyService;
 import co.yedam.prjt.board.service.ReplyVO;
 
@@ -18,19 +19,19 @@ import co.yedam.prjt.board.service.ReplyVO;
 public class ReplyController {
 	@Autowired
 	ReplyService replyService;
-
+	
 	// 댓글 조회
 	@GetMapping("/reply/{bno}")
-	public List<ReplyVO> replyList(ReplyVO vo, @PathVariable Long bno) {
-		vo.setBno(bno);
-		return replyService.getReply(vo);
+	public List<ReplyVO> replyList(@PathVariable Long bno) {
+		return replyService.getReply(bno);
 	}
 	
 	// 등록
 	@PostMapping("/reply")
 	public ReplyVO insert(ReplyVO vo) {
 		replyService.insertReply(vo);
-		return vo;
+		Long rno = vo.getRno();
+		return replyService.ReplySelect(rno);
 	}
 	
 	// 수정
@@ -42,8 +43,7 @@ public class ReplyController {
 	
 	// 삭제
 	@DeleteMapping("/reply/{bno}")
-	public int delete(ReplyVO vo, @PathVariable Long bno) {
-		vo.setBno(bno);
-		return replyService.deleteReply(vo);
+	public int delete(@PathVariable Long bno) {
+		return replyService.deleteReply(bno);
 	}
 }

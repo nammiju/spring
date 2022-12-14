@@ -7,9 +7,24 @@
 <meta charset="UTF-8">
 <title>BoardSelect</title>
 <script type="text/javascript">
+	let path = '${pageContext.request.contextPath}';
 	$(function(){
+		replyList();
 		replyInsert();
 		replyUpdate();
+		replyDelete();
+		
+		//댓글 출력 
+		function replyList(){
+			let bno = ${board.bno};
+			$.ajax({
+				url : path + '/reply/' + encodeURIComponent(bno),
+			}).then( res => {
+				for( reply of res){
+					$("tbody").append(makeTr(reply));					
+				}
+			})
+		}
 		
 		//댓글 등록
 		function replyInsert(){
@@ -27,10 +42,13 @@
 		}
 		
 		//댓글 수정
-		function replyInsert(){
+		function replyUpdate(){
 			$("#btnUpdate").on("click", function(){
+				let tr = $(this).closest("tr");
+				$("#name").val(${reply.replyer});
+				$("#reply").val(${reply.reply});
 				$.ajax({
-					url : path+ '/reply',
+					url : path + '/reply',
 					method : "put",
 					data : JSON.stringify( $("#replyForm").serializeObject() ),
 					contentType : "application/json"
@@ -41,13 +59,28 @@
 			})
 		}
 		//댓글 삭제
+		function replyDelete(){
+			$("#btnDelete").on("click", function(){
+				let tr = $(this).closest("tr");
+				let bno = $(this).closest("tr").data("bno");
+				$.ajax({
+					url : path+ '/reply/' + bno,
+					method : "delete"
+					//date:
+					//contentType:
+				}).then(res => {
+					alert("삭제완료");
+					tr.remove();
+				})
+			})
+		}
 		
 		//댓글 tr만들어줌
 		function makeTr(reply){
 			let tr = `<tr data-bno="\${reply.bno}">
-				<td>${reply.replyer}</td>
-				<td>${reply.reply} </td>
-				<td>${reply.replyDate}</td>
+				<td>\${reply.replyer}</td>
+				<td>\${reply.reply} </td>
+				<td>\${reply.replyDate }</td>
 				<td><button type="button" id="btnUpdate">수정</td>
 				<td><button type="button" id="btnDelete">삭제</td>
 			</tr>`
@@ -75,10 +108,11 @@
 	<div class="container">
 		<form id="replyForm" class="form-horizontal">
 			<h5>댓글 등록</h5>
-			<label>작성자:</label> <input type="text" class="form-control"
-				name="replyer"> <label>내용:</label> <input type="text"
-				class="form-control" name="reply"> <input type="button"
+			<label>작성자:</label> <input type="text" name="replyer" id="name"> 
+			<label>내용:</label> <input type="text" name="reply" id="reply"> 
+			<input type="button"
 				class="btn btn-primary" value="등록" id="btnInsert" />
+				<input type="hidden" name="bno" value="${board.bno}" >
 		</form>
 	</div>
 	<hr />

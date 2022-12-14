@@ -3,8 +3,8 @@
 <mapper namespace="co.yedam.prjt.board.mapper.ReplyMapper">
 	<!-- 게시글번호로 조회 -->
 	<select id="getReply" resultType="co.yedam.prjt.board.service.ReplyVO">
-		SELECT * FROM TBL_BOARD WHERE
-		BNO = #{bno}
+		SELECT * FROM TBL_REPLY 
+		WHERE BNO = #{bno}
 	</select>
 
 	<!-- 댓글 등록 -->
@@ -16,6 +16,13 @@
 		INSERT INTO TBL_REPLY (RNO, BNO, REPLY, REPLYER)
 		VALUES (#{rno}, #{bno}, #{reply}, #{replyer})
 	</insert>
+	
+	<!-- 댓글 작성시간 가져오기 -->
+	<select id="ReplySelect" resultType="co.yedam.prjt.board.service.ReplyVO">
+		SELECT *
+		FROM TBL_REPLY
+		WHERE RNO = #{rno}
+	</select>
 	
 	<!-- 댓글 수정 -->
 	<update id="updateReply" parameterType="long">
